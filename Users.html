@@ -1,0 +1,392 @@
+<script>
+  var datos = "";
+</script>
+<!doctype html>
+<html lang="en">
+  <head>
+  	<title>Index</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    	<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="Styles/stylesPrincipal/css/style.css">
+		<link rel="stylesheet" href="Styles/stylesPrincipal/css/tables.css">
+    <link rel="stylesheet" href="Styles/stylesPrincipal/css/buttons.css">
+    <link rel="stylesheet" href="Styles/stylesPrincipal/css/extras.css">
+
+    <!-- jsPDF library -->
+    <script src="Librery/dist/jspdf.min.js"></script>
+    
+  </head>
+  <body onload="getUsers()">
+		
+	<script>
+		//validar que la sesion esta abierta y los datos del usuario en curso
+		var validate = sessionStorage.login;
+		var type = sessionStorage.type;
+		var nickName = sessionStorage.nickName;
+		var name = sessionStorage.name;
+		var lastName = sessionStorage.lastName;
+		var password = sessionStorage.password;
+		if(validate){
+			//console.log('all its ok')
+		}else{
+			//alert('something go wrong')
+			window.location.href = "login.html";
+		}
+
+		
+	</script>
+		<div class="wrapper d-flex align-items-stretch">
+			<nav id="sidebar" class="active">
+				<div class="custom-menu">
+					<button type="button" id="sidebarCollapse" class="btn btn-primary">
+	          <i class="fa fa-bars"></i>
+	          <span class="sr-only">Toggle Menu</span>
+	        </button>
+        </div>
+				<div class="p-4" id="Menu">
+		  		<h1><a href="Principal.html" class="logo">Parfait Music</a></h1>
+	        <ul class="list-unstyled components mb-5">
+	          <li class="active">
+	            <a href="#"><span class="fa mr-3"></span>Mi Perfil</a>
+			  </li>
+	        </ul>
+
+		        <div class="mb-5">
+					<h3 class="h6 mb-3">Simplemente disfruta</h3>
+		        </div>
+		    </div>    
+    	</nav>
+
+			<!-- Page Content  -->
+		<div id="content" class="p-4 p-md-5 pt-5" >
+
+
+      <div class="mt-5" id="newForm">
+      </div>
+      <br>
+      <br>
+			<h1 class="mb-4" >Usuarios</h1>
+
+			<div class="container my-5 text-center">
+
+        <div class="row">
+          <div class="col">
+            <button class="btn btn-success w-100" id="pdf" onclick="createPDF()">Generar Archivo PDF</button>
+          </div>
+          <div class="col">
+            <button type="button" class="btn btn-dark  w-100" onclick="newUser()">Registrar un nuevo Usuario</button>
+          </div>
+        </div>
+
+              
+    
+                <div class="mt-5">
+                  <table class="table">
+                      <thead>
+                      <tr>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Apellido</th>
+                        <th scope="col">Nombre de usuario</th>
+                        <!--<th scope="col">Contraseña</th> -->
+                        <th scope="col">Permisos</th>
+                        <th scope="col">Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody id="showUsers">
+                    </tbody>
+                  </table>
+                </div>
+
+        </div>
+      </div>
+		</div>
+    <script src="Styles/stylesPrincipal/js/jquery.min.js"></script>
+    <script src="Styles/stylesPrincipal/js/popper.js"></script>
+    <script src="Styles/stylesPrincipal/js/bootstrap.min.js"></script>
+    <script src="Styles/stylesPrincipal/js/main.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.1/jquery.min.js" type="text/javascript"></script>
+		
+    <!--============================================================================================================-->
+        <script>
+            // Cargar el contenido de la barra
+            var contenido = document.querySelector('#Menu')
+            contenido.innerHTML = sessionStorage.bar;
+        </script>
+
+<script>
+    var contenido = document.querySelector('#showUsers')
+    function getUsers(){
+      fetch('http://localhost:5000/users')
+      .then(data => data.json())
+      .then(data =>{
+        datos = data;
+        printAllData(data)
+      })
+    }
+
+    function printAllData(data){
+      //console.log(data)
+      contenido.innerHTML = ''
+      for(let i of data){
+ 
+     
+       if(nickName == i.nickName){
+         console.log(i.nickName)
+        contenido.innerHTML += `
+       <tr>
+            <td>${i.name}</td>
+            <td>${i.lastName}</td>
+            <td>${i.nickName}</td>
+            <td>${i.type}</td>
+            <td>
+                <button type="button" id="itsMe" class="btn btn-warning">Soy yo</button> 
+            </td>
+          </tr>
+        `      
+       }else{
+       contenido.innerHTML += `
+       <tr>
+            <td>${i.name}</td>
+            <td>${i.lastName}</td>
+            <td>${i.nickName}</td>
+            <td>${i.type}</td>
+            <td>
+                <button type="button" class="btn btn-info" name="modify" onclick="modifyUser('${i.nickName}')">Modificar</button>
+                <button type="button" class="btn btn-danger" onclick="deleteUser('${i.nickName}')">Eliminar</button>    
+            </td>
+          </tr>
+        ` 
+       } 
+
+      } // end of for
+      var me = document.querySelector('#itsMe');
+      me.disabled = true;
+
+    } // end of fuction print
+
+    function deleteUser(vNick){
+      //console.log(h)
+      var message = {
+        nickName:vNick
+      }  
+
+      fetch('http://localhost:5000/users/delete',{
+        method:'DELETE',
+        body: JSON.stringify(message),
+        cache: "no-cache",
+        headers: new Headers({
+		    "content-type": "application/json" })
+      }) // end of fetch
+      .then(res => res.json())
+      .then(res => {
+        if(res['ans'] != 'null'){
+            alert('Usuario eliminado')
+            window.location.href = 'Users.html';
+        }else{
+          console.log(res['desk']);
+          alert('algo salio mal')
+        }
+      }) //end of then
+    }
+
+    function modifyUser(vNickOld){
+
+      var secForm = document.querySelector('#newForm');
+				secForm.innerHTML = `
+			  <h2 class="mb-4" >Ingresa Los Nuevos Datos:  ${vNickOld}</h2>
+					<table class="table">
+						<thead>
+						<tr>
+						  <th scope="col">Nombre</th>
+						  <th scope="col">Apellido</th>
+						  <th scope="col">Nombre de usuario</th>
+						  <th scope="col">Contraseña</th>
+						  <th scope="col">Permisos</th>
+						</tr>
+							<tr>
+							<th scope="col"> <input class="form-field" type="text" id="nName"> </th>
+							<th scope="col"> <input class="form-field" type="text" id="nLastName"> </th>
+							<th scope="col"> <input class="form-field" type="text" id="nNickName"> </th>
+							<th scope="col"> <input class="form-field" type="text" id="nPassword"> </th>
+							<th scope="col"> 
+								<select class="custom-select" id="nType">
+									<option value="admin">Administrador</option>
+									<option value="client">Cliente</option>	
+								</select>
+							</th>
+						<!--	<th scope="col"> <input class="form-field" type="text" id="nType"> </th> -->
+							</tr>
+					  </thead>
+					  <tbody id="showInput">
+					  </tbody>
+					</table>
+
+				<button class="btn btn-danger w-100" onclick="sendData('${vNickOld}')" type="button">Confirmar Actualización</button>
+      `
+       $('html, body').animate({scrollTop:0}, 'slow');
+    }
+
+    function sendData(vNickOld){
+      nName = document.getElementById('nName').value;
+      nLastName = document.getElementById('nLastName').value;
+      nNickName =  document.getElementById('nNickName').value;
+      nPassword =  document.getElementById('nPassword').value;
+      nType =  document.getElementById('nType').value;
+
+      if(nName == "" || nLastName == "" || nNickName == "" || nPassword == ""){
+            alert('Debes llenar todos los campos');
+          }else{
+
+      var newMod = {
+			oldNick: vNickOld,
+			name : nName,
+			lastName:nLastName,
+			nickName:nNickName,
+			password: nPassword,
+			type: nType
+		} //end of newMod
+
+    fetch('http://localhost:5000/users/modify',{
+			method:'PUT',
+			body: JSON.stringify(newMod),
+			cache: "no-cache",
+			headers: new Headers({
+			"content-type": "application/json" })
+		}) // end of fetch send
+		.then(res => res.json())
+		.then(res => {
+			if(res['answer'] != 'null'){
+			sessionStorage.login = true;
+			console.log(sessionStorage.nickName)
+        alert('Usuario Modificado con exito')
+        window.location.href ='Users.html';
+      }else{
+        alert("El usuario ya está registrado")
+      //	console.log(sessionStorage.login)
+        document.getElementById('nNickName').value = "";
+      }    
+      }) // end of then
+    
+    }// end of else
+    } // end of function
+    
+    function createPDF(){
+			var posY = 20;
+
+			var doc = new jsPDF();
+			doc.text(5, 10, 'LISTADO DE USUARIOS REGISTRADOS');
+			doc.setFontSize(10);
+			doc.text(10, posY, 'NOMBRE');
+			doc.text(75, posY, `APELLIDO`);
+			doc.text(125, posY, `USUARIO`);
+			doc.text(175, posY, `PERMISO`);
+			doc.text(5,posY+1,'_____________________________________________________________________________________________________');
+			posY = posY+8
+
+			var contador = 0;
+			for(let i of datos){
+				if(contador == 18){
+					// Add new page
+					doc.addPage();
+					posY = 10;
+					contador = 0;
+				}
+				doc.text(10, posY, `${i.name}`);
+				doc.text(75, posY, `${i.lastName}`);
+				doc.text(125, posY, `${i.nickName}`);
+				doc.text(175, posY, `${i.type}`);
+				//doc.addImage(portada, 'JPEG', 150, posY, 50, 50);
+				posY = posY + 15;
+				contador = contador + 1;
+			}			
+			doc.save('Lista-Usuarios.pdf');
+		}
+  
+    function newUser(){
+      var btnPDF = document.querySelector('#pdf')
+      btnPDF.disabled = true;
+
+      var btnModify = document.getElementsByName('#modify')
+      btnModify.disabled = true;
+
+      var secForm = document.querySelector('#newForm');
+				secForm.innerHTML = `
+			  <h2 class="mb-4" >Registra un nuevo usuario</h2>
+					<table class="table">
+						<thead>
+						<tr>
+						  <th scope="col">Nombre</th>
+						  <th scope="col">Apellido</th>
+						  <th scope="col">Nombre de usuario</th>
+						  <th scope="col">Contraseña</th>
+						  <th scope="col">Permisos</th>
+						</tr>
+							<tr>
+							<th scope="col"> <input class="form-field" type="text" id="nName2"> </th>
+							<th scope="col"> <input class="form-field" type="text" id="nLastName2"> </th>
+							<th scope="col"> <input class="form-field" type="text" id="nNickName2"> </th>
+							<th scope="col"> <input class="form-field" type="text" id="nPassword2"> </th>
+							<th scope="col"> 
+								<select class="custom-select" id="nType2">
+									<option value="admin">Administrador</option>
+									<option value="client">Cliente</option>	
+								</select>
+							</th>
+							</tr>
+					  </thead>
+					  <tbody id="showInput">
+					  </tbody>
+					</table>
+
+				<button class="btn btn-danger w-100" onclick="registrarUser()" type="button">Confirmar Registro</button>
+      `
+      $('html, body').animate({scrollTop:0}, 'slow');
+    }
+
+    function registrarUser(){
+      
+      nName = document.getElementById('nName2').value;
+      nLastName = document.getElementById('nLastName2').value;
+      nNickName =  document.getElementById('nNickName2').value;
+      nPassword =  document.getElementById('nPassword2').value;
+      nType =  document.getElementById('nType2').value;
+          if(nName == "" || nLastName == "" || nNickName == "" || nPassword == ""){
+            alert('Debes llenar todos los campos');
+          }else{
+            var newMod = {
+                name : nName,
+                lastName:nLastName,
+                nickName:nNickName,
+                password: nPassword,
+                type: nType
+              }
+
+              fetch('http://localhost:5000/users/register',{
+              method:'POST',
+              body: JSON.stringify(newMod),
+              cache: "no-cache",
+              headers: new Headers({
+                  "content-type": "application/json" })
+              }) // end of fetch send
+
+              .then(res => res.json())
+              .then(res => {
+                  if(res['answer']== 'ok'){
+                      alert("Nuevo Usuario registrado con exito");
+                      location.href = "Users.html"
+                  }else{
+                      alert(res['answer']);
+                  }
+
+              })
+            } // fin del else
+
+      
+    }
+    </script>
+
+    </body>
+</html>

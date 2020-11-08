@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+  <head>
+  	<title>Canciones Disponibles</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    	<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="Styles/stylesPrincipal/css/style.css">
+		<link rel="stylesheet" href="Styles/stylesPrincipal/css/extras.css">
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"> </script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3//jquery.min.js"></script>
+  </head>
+  <body onload="getData()">
+	<script>
+		//validar que la sesion esta abierta y los datos del usuario en curso
+		var validate = sessionStorage.login;
+		var type = sessionStorage.type;
+		var nickName = sessionStorage.nickName;
+		var name = sessionStorage.name;
+		var lastName = sessionStorage.lastName;
+		var password = sessionStorage.password;
+		if(validate){
+			sessionStorage.login = true;
+			//console.log('all its ok')
+		}else{
+			//alert('something go wrong')
+			window.location.href = "login.html";
+		}	
+	</script>
+
+		<div class="wrapper d-flex align-items-stretch">
+			<nav id="sidebar" class="active">
+				<div class="custom-menu">
+					<button type="button" id="sidebarCollapse" class="btn btn-primary">
+	          <i class="fa fa-bars"></i>
+	          <span class="sr-only">Toggle Menu</span>
+	        </button>
+        </div>
+				<div class="p-4" id="Menu">
+		  		<h1><a href="Principal.html" class="logo">Parfait Music</a></h1>
+	             <ul class="list-unstyled components mb-5">
+	             <li class="active">
+	            <a href="#"><span class="fa mr-3"></span> Mi Perfil</a>
+			    </li>
+	             </ul>
+
+		        <div class="mb-5">
+					<h3 class="h6 mb-3">Simplemente disfruta</h3>
+		        </div>
+		    </div>    
+    		</nav>
+
+			<!-- Page Content  -->
+			<div id="content" class="p-4 p-md-5 pt-5" >
+
+                <h1 class="mb-4" >Canciones Disponibles</h1>
+                
+                <div class="container my-5 text-center">			   
+					
+					 <div class="mt-5">
+						<table class="table">
+							<thead>
+							<tr>
+							  <th scope="col">Portada</th>
+							  <th scope="col">Dale Play</th>
+							  <th scope="col">Detalles</th>
+							  <th scope="col">Agregar a playlist</th>
+							</tr>
+						  </thead>
+						  <tbody id="showData">
+						  </tbody>
+						</table>
+					 </div>
+	 
+			 </div>
+				
+				  <div class="mt-5" id="newForm">
+
+				  </div>
+
+
+
+			</div>
+        </div>
+    <script src="Styles/stylesPrincipal/js/jquery.min.js"></script>
+    <script src="Styles/stylesPrincipal/js/popper.js"></script>
+    <script src="Styles/stylesPrincipal/js/bootstrap.min.js"></script>
+	<script src="Styles/stylesPrincipal/js/main.js"></script>
+        
+    <script>
+    
+    </script>
+
+	<!--============================================================================================================-->
+	
+	
+
+
+    <script>// Cargar el contenido de la barra
+        var contenido = document.querySelector('#Menu')
+        contenido.innerHTML = sessionStorage.bar;
+	</script>
+	
+	<script> // Charge table
+		var cont = document.querySelector('#showData');
+
+		function getData(){
+			fetch('http://localhost:5000/songs')
+			.then(data => data.json())
+			.then(data =>{
+				//console.log(data)
+				printAllData(data)
+			})
+		}
+
+		function printAllData(data){
+			//console.log("tamaño del vector"+data.length)
+			for(let i of data){
+				cont.innerHTML += `
+					<tr>
+						<td>
+							<img src="${i.image}" width="200" height="200">
+						</td>
+						<td>
+							<iframe src="${i.spotify}" width="500" height="200" frameborder="0"
+ 							allowtransparency="true" allow="encrypted-media"></iframe>
+						</td>
+						<td>
+							<button type="button" class="btn btn-info" onclick="seeDetails('${i.id}')">Ver detalles</button>
+						</td>
+						<td>
+							<button type="button" class="btn btn-success" onclick="addPlaylist('${i.id}')">Agregar a mi Playlist</button>
+						</td>
+					</tr>
+						`
+	 		} // end of for i
+
+    } // end of fuction print
+
+		function seeDetails(idS){
+				sessionStorage.idS = idS;
+				
+				console.log(sessionStorage.idS)
+				alert('Irá a la página de Detalles')
+				window.location.href = 'seeDetails.html';
+		}
+	
+		function addPlaylist(idS){
+			
+
+
+
+
+
+
+
+			elePlay = {
+			//	'id':1,
+				user:nickName,
+				idSong:idS,
+				name:nameS,
+				artist:artistS,
+				album:albumS,
+				year:yearS,
+				spotify:spotifyS,
+				youtube:youtubeS
+			}
+			
+			fetch('http://localhost:5000/playlist/add',{
+				method:'POST',
+				body: JSON.stringify(elePlay),
+				cache: "no-cache",
+				headers: new Headers({
+					"content-type": "application/json" })
+				}) // end of fetch
+				.then(res => res.json())
+				.then(res => {
+					alert('Cancion agregada a tu playlist')
+				})
+			
+		}
+	</script>
+
+  </body>
+</html>

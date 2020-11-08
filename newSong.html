@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+  <head>
+  	<title>Realizar Solicitud</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    	<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="Styles/stylesPrincipal/css/style.css">
+   		 <link rel="stylesheet" href="Styles/stylesPrincipal/css/buttons.css">
+    	 <link rel="stylesheet" href="Styles/stylesPrincipal/css/extras.css">
+  </head>
+  <body onload="">
+		
+	<script>
+		//validar que la sesion esta abierta y los datos del usuario en curso
+		var validate = sessionStorage.login;
+		
+		if(validate){
+			//console.log('all its ok')
+		}else{
+			//alert('something go wrong')
+			window.location.href = "login.html";
+		}
+
+		//variables del usuario en uso
+		var type = sessionStorage.type;
+		var nickName = sessionStorage.nickName;
+		var name = sessionStorage.name;
+		var lastName = sessionStorage.lastName;
+		var password = sessionStorage.password;
+
+		
+    </script>
+    
+		<div class="wrapper d-flex align-items-stretch">
+			<nav id="sidebar" class="active">
+				<div class="custom-menu">
+					<button type="button" id="sidebarCollapse" class="btn btn-primary">
+	          <i class="fa fa-bars"></i>
+	          <span class="sr-only">Toggle Menu</span>
+	        </button>
+        </div>
+				<div class="p-4" id="Menu">
+		  		<h1><a href="Principal.html" class="logo">Parfait Music</a></h1>
+	        <ul class="list-unstyled components mb-5">
+	          <li class="active">
+	            <a href="#"><span class="fa mr-3"></span>Mi Perfil</a>
+			  </li>
+	        </ul>
+
+		        <div class="mb-5">
+					<h3 class="h6 mb-3">Simplemente disfruta</h3>
+		        </div>
+		    </div>    
+    	</nav>
+
+			<!-- Page Content  -->
+		<div id="content" class="p-4 p-md-5 pt-5" >
+
+            <h1>Registrar una canción</h1>
+           			<div class="row" id="information">
+                
+                <table class="table" id="listComents">
+                    <thead>
+                        <tr>
+                        <th>Requerimentos</th>
+                        <th>Llene los campos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Nombre de la cancion</td>
+                            <td> <input class="form-field" type="text" id="nameSong"> </td>
+                        </tr>
+                        <tr>
+                            <td>Artista</td>
+                            <td> <input class="form-field" type="text" id="artistSong"> </td>
+                        </tr>
+                        <tr>
+                            <td>Album al que pertenece</td>
+                            <td> <input class="form-field" type="text" id="albumSong"> </td>
+                        </tr>
+                        <tr>
+                            <td>Fecha de lanzamiento</td>
+                            <td> <input class="form-field" type="text" id="yearSong"> </td>
+                        </tr>
+                        <tr>
+                            <td>Imagen de portada</td>
+                            <td> <input class="form-field" type="text" id="imageSong"> </td>
+                        </tr>
+                        <tr>
+                            <td>Link de Spotify</td>
+                            <td> <input class="form-field" type="text" id="spotifySong"> </td>
+                        </tr>
+                        <tr>
+                            <td>Link de youtube</td>
+                            <td> <input class="form-field" type="text" id="youtubeSong"> </td>
+                        </tr>
+                    </tbody>
+				</table>
+            </div>
+            <br>
+            <button class="btn btn-info w-100" type="button" onclick="sendRequest()">Registrar canción</button>
+
+      </div>
+		</div>
+    <script src="Styles/stylesPrincipal/js/jquery.min.js"></script>
+    <script src="Styles/stylesPrincipal/js/popper.js"></script>
+    <script src="Styles/stylesPrincipal/js/bootstrap.min.js"></script>
+    <script src="Styles/stylesPrincipal/js/main.js"></script>
+		
+    <!--============================================================================================================-->
+        <script>
+            // Cargar el contenido de la barra
+            var contenido = document.querySelector('#Menu')
+            contenido.innerHTML = sessionStorage.bar;
+        </script>
+    <script>
+        function sendRequest(){
+            var nameS = document.getElementById('nameSong').value;
+            var artistS = document.getElementById('artistSong').value;
+            var albumS = document.getElementById('albumSong').value;
+            var imageS =  document.getElementById('imageSong').value;
+            var yearS =  document.getElementById('yearSong').value;
+            var spotifyS = document.getElementById('spotifySong').value;
+            var youtubeS = document.getElementById('youtubeSong').value;
+       console.log(nameS)
+       if (nameS == ""  || artistS == "" || albumS == "" || yearS == "" || spotifyS == "" || youtubeS == "" || imageS == "" ) {
+           alert('Llena todos los campos para registrar una canción')
+       }else{
+           newRequest = {
+               user:nickName,
+               name:nameS,
+               artist:artistS,
+               album:albumS,
+               image:imageS,
+               year:yearS,
+               spotify:spotifyS,
+               youtube:youtubeS
+           }
+
+           fetch('http://localhost:5000/songs/register',{
+			method:'POST',
+			body: JSON.stringify(newRequest),
+			cache: "no-cache",
+			headers: new Headers({
+			"content-type": "application/json" })
+		}) // end of fetch send
+		.then(res => res.json())
+        .then(res => {
+            alert('Canción Registrada')
+            window.location.href = 'Songs.html';
+        })
+       }
+
+        }
+    </script>
+    </body>
+</html>

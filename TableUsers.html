@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+    <title>Music</title>
+  </head>
+  <body>
+        <div class="container my-5 text-center">
+            <button class="btn btn-primary w-100" onclick="getUsers()">Usuarios registrados</button>
+
+            <div class="mt-5">
+              <table class="table">
+                  <thead>
+                  <tr>
+                    <th scope="col">Posición</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Apellido</th>
+                    <th scope="col">Nombre de usuario</th>
+                    <th scope="col">Contraseña</th>
+                    <th scope="col">Permisos</th>
+                  </tr>
+                </thead>
+                <tbody id="showUsers">
+                  <tr>
+                    <th scope="row"></th>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+        </div>
+
+
+        <script>
+            var contenido = document.querySelector('#showUsers')
+            function getUsers(){
+              fetch('http://localhost:5000/users')
+              .then(data => data.json())
+              .then(data =>{
+                //console.log(data)
+                printAllData(data)
+              })
+            }
+
+            function printAllData(data){
+              //console.log(data)
+              contenido.innerHTML = ''
+              for(let i of data){
+                var cont = 2
+                
+               // console.log(i.name)
+               contenido.innerHTML += `
+               <tr>
+                    <th scope="row">${cont}</th>
+                    <td>${i.name}</td>
+                    <td>${i.lastName}</td>
+                    <td>${i.nickName}</td>
+                    <td>${i.password}</td>
+                    <td>${i.type}</td>
+                  </tr>
+                `
+                cont = cont + 1
+              } 
+
+            }
+        </script>
+
+  </body>
+</html>

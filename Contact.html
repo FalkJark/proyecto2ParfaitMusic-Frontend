@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+  	<title>Contactanos</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+		
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="Styles/stylesPrincipal/css/style.css">
+  </head>
+  <body>
+		
+		<div class="wrapper d-flex align-items-stretch">
+			<nav id="sidebar" class="active">
+				<div class="custom-menu">
+					<button type="button" id="sidebarCollapse" class="btn btn-primary">
+	          <i class="fa fa-bars"></i>
+	          <span class="sr-only">Toggle Menu</span>
+	        </button>
+        </div>
+				<div class="p-4" id="Menu">
+		  		<h1><a href="Login.html" class="logo">Parfait Music</a></h1>
+	        <ul class="list-unstyled components mb-5">
+	          <li>
+              <a href="Contact.html"><span class="fa mr-3"></span>Contáctanos</a>
+			  </li>
+			  <li>
+				<a href="AboutUs.html"><span class="fa mr-3"></span>Sobre Nosotros</a>
+				</li>
+	          <li>
+              <a href="Login.html"><span class="fa mr-3"></span>Iniciar Sesión</a>
+	          </li>
+	        </ul>
+
+		        <div class="mb-5">
+					<h3 class="h6 mb-3">Simplemente disfruta</h3>
+		        </div>
+		    </div>    
+    	</nav>
+
+        <!-- Page Content  -->
+      <div id="content" class="p-4 p-md-5 pt-5">
+        <h1 class="mb-4" id="simpleTitle">Contáctanos</h1>
+		<div id="simpleText">
+			<p>Me puedes encontrar caminando por la universidad, normalmente llevo un sueter con capucha</p>
+		</div>
+
+      </div>
+		</div>
+
+    <script src="Styles/stylesPrincipal/js/jquery.min.js"></script>
+    <script src="Styles/stylesPrincipal/js/popper.js"></script>
+    <script src="Styles/stylesPrincipal/js/bootstrap.min.js"></script>
+	<script src="Styles/stylesPrincipal/js/main.js"></script>
+	
+	<script>
+		var validate = sessionStorage.login;
+	//	console.log(validate)
+		if(validate == 'true'){
+			var cont = document.querySelector('#Menu')
+			var barra = sessionStorage.bar;
+			cont.innerHTML = barra;
+			//console.log(barra)
+		//	console.log('est[a pasando por el if ')
+			//console.log('all its ok')
+		}else{
+			var cont = document.querySelector('#Menu')
+			cont.innerHTML = `
+			<h1><a href="Principal.html" class="logo">Parfait Music</a></h1>
+	        <ul class="list-unstyled components mb-5">
+	          <li>
+              <a href="Contact.html"><span class="fa mr-3"></span>Contáctanos</a>
+			  </li>
+			  <li>
+				<a href="AboutUs.html"><span class="fa mr-3"></span>Sobre Nosotros</a>
+				</li>
+	          <li>
+              <a href="Login.html"><span class="fa mr-3"></span>Iniciar Sesión</a>
+	          </li>
+	        </ul>
+
+		        <div class="mb-5">
+					<h3 class="h6 mb-3">Simplemente disfruta</h3>
+		        </div>
+			`
+			//alert('something go wrong')
+		}	
+		</script>
+  </body>
+</html>

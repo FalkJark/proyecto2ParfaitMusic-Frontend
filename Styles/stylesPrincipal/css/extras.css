@@ -1,0 +1,50 @@
+
+.form-field {
+  white-space: nowrap;
+  display: block;
+  background-color:white;
+  border-radius: 6px 6px 6px 6px;
+  text-align: center;
+  position: relative;
+    display: flex;
+    width: 100%;
+    border: 1px solid #3498DB;
+}
+
+    #simpleBtn-file{
+      color:#fff;
+      background-color:#17a2b8;
+      border-color:#17a2b8;
+      text-align: center;
+      line-height: 38px;
+      height: 38px;
+      font-size:1rem;
+      border-radius:.25rem;
+      position: relative;
+    }
+      
+    #simpleBtn-file:hover{color:#fff;
+      background-color:#138496;
+      border-color:#117a8b;
+      cursor: pointer;
+    }
+
+    #selectorFile{
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom:0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+    }
+
+    #btn-blue{
+      color:#fff;
+      background-color: #007bff;
+    }
+
+    #btn-blue:hover{
+      color:#fff;background-color: #0069d9;
+    }

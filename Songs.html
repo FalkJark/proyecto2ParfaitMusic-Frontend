@@ -1,0 +1,364 @@
+<script>
+	//global variables
+	var datos = "variable global";
+</script>
+<!doctype html>
+<html lang="en">
+  <head>
+  	<title>Canciones</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    	<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="Styles/stylesPrincipal/css/style.css">
+		<link rel="stylesheet" href="Styles/stylesPrincipal/css/extras.css">
+
+		<!-- jsPDF library -->
+		<script src="Librery/dist/jspdf.min.js"></script>
+
+  </head>
+  <body onload="getData()">
+		
+	<script>
+		//validar que la sesion esta abierta y los datos del usuario en curso
+		var validate = sessionStorage.login;
+		var type = sessionStorage.type;
+		var nickName = sessionStorage.nickName;
+		var name = sessionStorage.name;
+		var lastName = sessionStorage.lastName;
+		var password = sessionStorage.password;
+		if(validate){
+			sessionStorage.login = true;
+			//console.log('all its ok')
+		}else{
+			//alert('something go wrong')
+			window.location.href = "login.html";
+		}	
+	</script>
+
+		<div class="wrapper d-flex align-items-stretch">
+			<nav id="sidebar" class="active">
+				<div class="custom-menu">
+					<button type="button" id="sidebarCollapse" class="btn btn-primary">
+	          <i class="fa fa-bars"></i>
+	          <span class="sr-only">Toggle Menu</span>
+	        </button>
+        </div>
+				<div class="p-4" id="Menu">
+		  		<h1><a href="Principal.html" class="logo">Parfait Music</a></h1>
+	        <ul class="list-unstyled components mb-5">
+	          <li class="active">
+	            <a href="#"><span class="fa mr-3"></span> Mi Perfil</a>
+			  </li>
+	        </ul>
+
+		        <div class="mb-5">
+					<h3 class="h6 mb-3">Simplemente disfruta</h3>
+		        </div>
+		    </div>    
+    		</nav>
+
+			<!-- Page Content  -->
+			<div id="content" class="p-4 p-md-5 pt-5" >
+			
+				<!-- input of cvs -->
+				
+			
+				<div class="row">
+					<div class="col">
+						<div id="simpleBtn-file">
+							<p id="textSelector">Cargar Archivo CVS de Canciones</p>
+							<input type="file" id="selectorFile">
+						</div>
+					</div>
+					<div class="col">
+						<button id="modifyData" class="btn btn-success w-100" onclick="createPDF()">Generar PDF de las Canciones</button>
+					</div>
+				  </div>   
+				  <br>
+				  <button class="btn btn-secondary w-100" onclick="window.location.href='newSong.html' ">Registrar una nueva Canción</button>
+
+				<div class="mt-5" id="PDF">
+                    <h1 >Canciones Cargadas</h1>
+					<table class="table" id="titletest">
+						<thead>
+							<tr>
+								<input type="text" class="my-5 mx-5" style="width: 80%; height: 50px;" id="input-search">
+							<button type="button" onclick="filtrar()" class="btn btn-info" style="width: 10%;height: 50px;" id="btn-search">Buscar</button>
+							</tr>
+						<tr>
+						  <th scope="col">ID</th> 
+						  <th scope="col">Nombre</th>
+						  <th scope="col">Artista</th>
+						  <th scope="col">Album</th>
+						  <th scope="col">Imagen</th>
+                          <th scope="col">Fecha</th>
+                          <th scope="col">Spotify</th>
+						  <th scope="col">Youtube</th>
+						  <th scope="col">Opciones</th>
+						</tr>
+					  </thead>
+					  <tbody id="showData">
+					  </tbody>
+
+					</table>
+
+				  </div>
+				
+				  <div class="mt-5" id="newForm">
+
+				  </div>
+			</div>
+		</div>
+
+    <script src="Styles/stylesPrincipal/js/jquery.min.js"></script>
+    <script src="Styles/stylesPrincipal/js/popper.js"></script>
+    <script src="Styles/stylesPrincipal/js/bootstrap.min.js"></script>
+	<script src="Styles/stylesPrincipal/js/main.js"></script>
+
+	<!--============================================================================================================-->
+	<script> // administration of cvs
+		// separate text
+		function leerCVS(text,separador=";",emitirEncabezado=true){
+        return text.slice(0)
+        .split('\n')
+        .map(l => l.split(separador))
+      }
+
+      
+
+    function leerArchivo(e) {
+        var archivo = e.target.files[0];
+        if (!archivo) {
+          return;
+        }
+        
+        var lector = new FileReader();
+        lector.onload = function(e) {
+          var contenido = e.target.result;
+          
+          try {
+			var lectura = leerCVS(contenido);
+		
+		//	console.log("tam of vector: "+lectura.length)
+			for(var i = 0; i < lectura.length; i++){
+				
+				var newSong = {
+					name: lectura[i][0],
+					artist: lectura[i][1],
+					album: lectura[i][2],
+					year: lectura[i][3],
+					image: lectura[i][4],
+					spotify: lectura[i][5],
+					youtube: lectura[i][6]
+				}
+				fetch('http://localhost:5000/songs/register',{
+					method:'POST',
+					body: JSON.stringify(newSong),
+					cache: "no-cache",
+					headers: new Headers({
+					"content-type": "application/json" })
+				}) // end of fetch send
+
+				if(i+1 == lectura.length){ 
+					alert('Espere mientras cargan todas las canciones')
+					window.location.href = 'Songs.html';
+					
+				}
+				//console.log("iteracion: "+i)
+			} // end of for i
+			alert('Canciones cargadas con exito');
+			//setTimeout(redir(),10000);
+
+          } catch (e) {
+            console.log(`Error: ${e.message}`);
+          }
+
+          //mostrarContenido(contenido);
+        };
+
+        lector.readAsText(archivo);
+    } // end function leerArchivo
+
+
+    document.getElementById('selectorFile')
+    .addEventListener('change', leerArchivo, false);
+	  </script>
+	
+    <script>// Cargar el contenido de la barra
+        var contenido = document.querySelector('#Menu')
+        contenido.innerHTML = sessionStorage.bar;
+	</script>
+	
+	<script> // Charge table
+		var contenido = document.querySelector('#showData');
+
+		function getData(){
+			fetch('http://localhost:5000/songs')
+			.then(data => data.json())
+			.then(data =>{
+				printAllData(data)
+				datos = data;
+				//console.log(datos)
+			})
+		}
+
+		function printAllData(data){
+		contenido.innerHTML = ''
+		for(let i of data){
+	
+		contenido.innerHTML += `
+       <tr>
+			<td>${i.id}</td>
+            <td>${i.name}</td>
+            <td>${i.artist}</td>
+            <td>${i.album}</td>
+            <td><img src="${i.image}" width="100" height="100""></td>
+			<td>${i.year}</td>
+			<td>${i.spotify}</td>
+			<td>${i.youtube}</td>
+            <td>
+                <button type="button" class="btn btn-info w-100" onclick="modifySong('${i.id}','${i.name}','${i.artist}','${i.album}','${i.image}','${i.year}','${i.spotify}','${i.youtube}')">Modificar</button>
+				<br>
+				<br>
+				<button type="button" class="btn btn-danger w-100" onclick="deleteSong('${i.id}')">Eliminar</button>
+				<br>
+				<br>
+				<button type="button" class="btn btn-secondary w-100" onclick="seeComents('${i.id}','${i.name}','${i.image}')">Ver comentarios</button>
+            </td>
+          </tr>
+        `      
+ 		} // end of for
+    } // end of fuction print
+
+		function seeComents(idSong,nameS,img){
+			sessionStorage.idScoment = idSong;
+			sessionStorage.nameScoment = nameS;
+			sessionStorage.imgSong = img;
+			console.log(sessionStorage.imgSong)
+			alert('verás los comentarios de: '+nameS)
+			window.location.href = 'ComentsAdmin.html'
+		}
+
+		function deleteSong(idSong){
+		//console.log(h)
+		var message = {
+			id:idSong
+		}  
+
+		fetch('http://localhost:5000/songs/delete',{
+			method:'DELETE',
+			body: JSON.stringify(message),
+			cache: "no-cache",
+			headers: new Headers({
+				"content-type": "application/json" })
+		}) // end of fetch
+		.then(res => res.json())
+		.then(res => {
+			if(res['ans'] != 'null'){
+				alert('Canción eliminada')
+				window.location.href = 'Songs.html';
+			}else{
+			console.log(res['desk']);
+			alert('algo salio mal')
+			}
+		}) //end of then
+		}
+
+		function createPDF(){
+			var posY = 20;
+
+			var doc = new jsPDF();
+			doc.text(5, 10, 'LISTADO DE CANCIONES CARGADAS');
+			doc.setFontSize(10);
+			doc.text(5, posY, 'ID');
+			doc.text(11, posY, 'NOMBRE');
+			doc.text(95, posY, `ARTISTA`);
+			doc.text(145, posY, `ALBUM`);
+			doc.text(195, posY, `AÑO`);
+			doc.text(5,posY+1,'_____________________________________________________________________________________________________');
+			posY = posY+8
+
+			var contador = 0;
+			for(let i of datos){
+				if(contador == 18){
+					// Add new page
+					doc.addPage();
+					posY = 10;
+					contador = 0;
+				}
+				doc.text(5, posY, `${i.id}`);
+				doc.text(12, posY, `${i.name}`);
+				doc.text(95, posY, `${i.artist}`);
+				doc.text(145, posY, `${i.album}`);
+				doc.text(195, posY, `${i.year}`);
+				//doc.addImage(portada, 'JPEG', 150, posY, 50, 50);
+				posY = posY + 15;
+				contador = contador + 1;
+			}			
+			doc.save('Lista-Canciones.pdf');
+		}	
+	
+		function modifySong(mId,mName,mArtist,mAlbum,mImage,mYear,mSpotify,mYoutube){
+
+			sessionStorage.mId = mId;
+			sessionStorage.mName = mName;
+			sessionStorage.mArtist = mArtist;
+			sessionStorage.mAlbum = mAlbum;
+			sessionStorage.mImage = mImage;
+			sessionStorage.mYear = mYear;
+			sessionStorage.mSpotify = mSpotify;
+			sessionStorage.mYoutube = mYoutube;
+
+			alert('Irá a la página para modificar')
+			window.location.href = 'modifySong.html';
+		}
+	</script>
+
+	<script> //search
+	var btnSearch = document.querySelector('#btn-search')
+	var inputSearh = document.querySelector('#input-search')
+	var contenido = document.querySelector('#showData');
+
+	function filtrar(){
+		var text = inputSearh.value.toLowerCase();
+		console.log(text)
+		var empty = true;
+		for(let i of datos){
+			let item = i.name.toLowerCase();
+			console.log(item)
+			if(item.indexOf(text) !== -1){
+
+				contenido.innerHTML = `
+				<tr>
+			<td>${i.id}</td>
+            <td>${i.name}</td>
+            <td>${i.artist}</td>
+            <td>${i.album}</td>
+            <td><img src="${i.image}" width="100" height="100""></td>
+			<td>${i.year}</td>
+			<td>${i.spotify}</td>
+			<td>${i.youtube}</td>
+            <td>
+                <button type="button" class="btn btn-info w-100" onclick="modifySong('${i.id}','${i.name}','${i.artist}','${i.album}','${i.image}','${i.year}','${i.spotify}','${i.youtube}')">Modificar</button>
+				<br>
+				<br>
+				<button type="button" class="btn btn-danger w-100" onclick="deleteSong('${i.id}')">Eliminar</button>
+				<br>
+				<br>
+				<button type="button" class="btn btn-secondary w-100" onclick="seeComents('${i.id}','${i.name}','${i.image}')">Ver comentarios</button>
+            </td>
+          </tr>
+				`
+				empty = false;
+			}
+		}
+		if(empty === true){
+				contenido.innerHTML = "NO HUBIERON COINCIDENCIAS"
+		}	
+	}
+
+	</script>
+  </body>
+</html>

@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+  <head>
+  	<title>Index</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    	<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="Styles/stylesPrincipal/css/style.css">
+	<!--	<link rel="stylesheet" href="Styles/stylesPrincipal/css/tables.css">-->
+		<link rel="stylesheet" href="Styles/stylesPrincipal/css/extras.css">
+  </head>
+  <body onload="menu()">
+		
+	<script>
+		//validar que la sesion esta abierta y los datos del usuario en curso
+		var validate = sessionStorage.login;
+		var type = sessionStorage.type;
+		var nickName = sessionStorage.nickName;
+		var name = sessionStorage.name;
+		var lastName = sessionStorage.lastName;
+		var password = sessionStorage.password;
+		if(validate){
+			sessionStorage.login = true;
+			//console.log('all its ok')
+		}else{
+			//alert('something go wrong')
+			window.location.href = "login.html";
+		}
+
+		
+	</script>
+		<div class="wrapper d-flex align-items-stretch">
+			<nav id="sidebar" class="active">
+				<div class="custom-menu">
+					<button type="button" id="sidebarCollapse" class="btn btn-primary">
+	          <i class="fa fa-bars"></i>
+	          <span class="sr-only">Toggle Menu</span>
+	        </button>
+        </div>
+				<div class="p-4" id="Menu">
+		  		<h1><a href="Principal.html" class="logo">Parfait Music</a></h1>
+	        <ul class="list-unstyled components mb-5">
+	          <li class="active">
+	            <a href="Principal.html"><span class="fa mr-3"></span> Mi Perfil</a>
+			  </li>
+	        </ul>
+
+		        <div class="mb-5">
+					<h3 class="h6 mb-3">Simplemente disfruta</h3>
+		        </div>
+		    </div>    
+    	</nav>
+
+			<!-- Page Content  -->
+			<div id="content" class="p-4 p-md-5 pt-5" >
+
+				<h1 class="mb-4" >Mi Perfil</h1>
+				
+				<button id="modifyData" class="btn btn-info w-100" onclick="Modify()">Modificar mis datos</button>
+				
+					
+				<div class="mt-5">
+					<table class="table">
+						<thead>
+						<tr>
+						  <th scope="col">Nombre</th>
+						  <th scope="col">Apellido</th>
+						  <th scope="col">Nombre de usuario</th>
+						  <th scope="col">Contraseña</th>
+						  <th scope="col">Permisos</th>
+						</tr>
+					  </thead>
+					  <tbody id="showData">
+					  </tbody>
+					</table>
+
+				  </div>
+				
+				  <div class="mt-5" id="newForm">
+
+				  </div>
+
+
+
+			</div>
+		</div>
+    <script src="Styles/stylesPrincipal/js/jquery.min.js"></script>
+    <script src="Styles/stylesPrincipal/js/popper.js"></script>
+    <script src="Styles/stylesPrincipal/js/bootstrap.min.js"></script>
+	<script src="Styles/stylesPrincipal/js/main.js"></script>
+	
+	<!--============================================================================================================-->
+	<script>
+		var contenido = document.querySelector('#Menu')
+		var btnMod = document.querySelector('#modifyData')
+
+		var table = document.querySelector('#showData');
+		table.innerHTML += `
+			<tr>
+				<td>${name}</td>
+				<td>${lastName}</td>
+				<td>${nickName}</td>
+				<td>${password}</td>
+				<td>${type}</td>
+			</tr>
+		`
+
+		// =============================Fuctions ========================================
+
+		var contentBar;
+		function menu(){
+			switch(type){
+				case 'admin':
+					contentBar = `
+				<h1><a href="Principal.html" class="logo">Parfait Music</a></h1>
+	        	<ul class="list-unstyled components mb-5">
+					<li class="active">
+						<a href="Principal.html"><span class="fa mr-3"></span>Perfil</a>
+					</li>
+					<li>
+						<a href="Songs.html"><span class="fa mr-3"></span>Canciones</a>
+					</li>
+					<li>
+						<a href="requestAdmin.html"><span class="fa mr-3"></span>Solicitudes</a>
+					</li>
+					<li>
+						<a href="Users.html"><span class="fa mr-3"></span>Usuarios</a>
+					</li>
+					<li>
+						<a href="AboutUs.html"><span class="fa mr-3"></span>Sobre Nosotros</a>
+					</li>
+					<li>
+						<a href="Contact.html"><span class="fa mr-3"></span> Contáctanos</a>
+					</li>
+					<li>
+						<a href="Login.html"><span class="fa mr-3"></span>Cerrar sesión</a>
+					</li>
+				</ul>`;
+				contenido.innerHTML = contentBar;
+				sessionStorage.bar = contentBar;
+				break;
+
+				case 'client':
+				contentBar =  `
+				<h1><a href="Principal.html" class="logo">Parfait Music</a></h1>
+	        	<ul class="list-unstyled components mb-5">
+					<li class="active">
+						<a href="Principal.html"><span class="fa mr-3"></span>Mi Perfil</a>
+					</li>
+					<li>
+						<a href="AvailableSongs.html"><span class="fa mr-3"></span>Canciones Disponibles</a>
+					</li>
+					<li>
+						<a href="MyPlaylist.html"><span class="fa mr-3"></span>Mi playlist</a>
+					</li>
+					<li>
+						<a href="requestClient.html"><span class="fa mr-3"></span>Solicitar</a>
+					</li>
+					<li>
+						<a href="AboutUs.html"><span class="fa mr-3"></span>Sobre Nosotros</a>
+					</li>
+					<li>
+						<a href="Contact.html"><span class="fa mr-3"></span> Contáctanos</a>
+					</li>
+					<li>
+						<a href="Login.html"><span class="fa mr-3"></span>Cerrar sesión</a>
+					</li>
+				</ul>`;
+				contenido.innerHTML = contentBar;
+				sessionStorage.bar = contentBar;
+				break;
+			}
+		}
+
+		function Modify(){
+			btnMod.disabled = true;
+
+			var secForm = document.querySelector('#newForm');
+			if (sessionStorage.type == 'admin'){
+				secForm.innerHTML = `
+			<h3 class="mb-4" >Ingresa tus Nuevos Datos</h3>
+					<table class="table">
+						<thead>
+						<tr>
+						  <th scope="col">Nombre</th>
+						  <th scope="col">Apellido</th>
+						  <th scope="col">Nombre de usuario</th>
+						  <th scope="col">Contraseña</th>
+						  <th scope="col">Permisos</th>
+						</tr>
+							<tr>
+							<th scope="col"> <input class="form-field" type="text" id="nName"> </th>
+							<th scope="col"> <input class="form-field" type="text" id="nLastName"> </th>
+							<th scope="col"> <input class="form-field" type="text" id="nNickName"> </th>
+							<th scope="col"> <input class="form-field" type="text" id="nPassword"> </th>
+							<th scope="col"> 
+								<select class="custom-select" id="nType">
+									<option value="admin">Administrador</option>
+									<option value="client">Cliente</option>	
+								</select>
+					  </thead>
+					  <tbody id="showInput">
+					  </tbody>
+					</table>
+
+				<button class="btn btn-danger w-100" onclick="sendData('admin')" type="button">Confirmar Actualización</button>
+				<p>Los campos que dejes vacios no se modificaran</p>
+			`
+			}else{
+				secForm.innerHTML = `
+			<h3 class="mb-4" >Ingresa tus Nuevos Datos</h3>
+					<table class="table">
+						<thead>
+						<tr>
+						  <th scope="col">Nombre</th>
+						  <th scope="col">Apellido</th>
+						  <th scope="col">Nombre de usuario</th>
+						  <th scope="col">Contraseña</th>
+						</tr>
+							<tr>
+							<th scope="col"> <input class="form-field" type="text" id="nName"> </th>
+							<th scope="col"> <input class="form-field" type="text" id="nLastName"> </th>
+							<th scope="col"> <input class="form-field" type="text" id="nNickName"> </th>
+							<th scope="col"> <input class="form-field" type="text" id="nPassword"> </th>
+							</tr>
+						
+
+					  </thead>
+					  <tbody id="showInput">
+					  </tbody>
+					</table>
+				<button class="btn btn-danger w-100" onclick="sendData('client')" type="button">Confirmar Actualización</button>
+				<p>Los campos que dejes vacios no se modificaran</p>
+			`
+			}
+			
+		}
+
+		btnMod.disabled = false;
+	</script>
+
+	<script>
+		function sendData(typeUser){
+			nName = document.getElementById('nName').value;
+			nLastName = document.getElementById('nLastName').value;
+			nNickName =  document.getElementById('nNickName').value;
+			nPassword =  document.getElementById('nPassword').value;
+			if(nName==""){ nName = name}
+			if(nLastName==""){ nLastName = lastName}
+			if(nNickName==""){ nNickName = nickName}
+			if(nPassword==""){ nPassword = password}
+			
+			switch(typeUser){
+				//to admins
+				case 'admin':
+					nType =  document.getElementById('nType').value;
+				break;
+
+				// to clients
+				case 'client':
+					nType = type;
+				break;
+			}
+
+		//	console.log(sessionStorage.nickName);
+		var newMod = {
+			oldNick: sessionStorage.nickName,
+			name : nName,
+			lastName:nLastName,
+			nickName:nNickName,
+			password: nPassword,
+			type: nType
+		}
+
+		fetch('http://localhost:5000/users/modify',{
+			method:'PUT',
+			body: JSON.stringify(newMod),
+			cache: "no-cache",
+			headers: new Headers({
+			"content-type": "application/json" })
+		}) // end of fetch send
+		.then(res => res.json())
+		.then(res => {
+			if(res['answer'] != 'null'){
+			sessionStorage.login = true;
+			sessionStorage.type = res['answer'].type;
+			sessionStorage.nickName = res['answer'].nickName;
+			sessionStorage.name = res['answer'].name;
+			sessionStorage.lastName = res['answer'].lastName;
+			sessionStorage.password = res['answer'].password;
+			console.log(sessionStorage.nickName)
+			alert('Usuario Modificado con exito')
+			window.location.href ='Principal.html';
+		}else{
+			alert("El usuario ya está registrado")
+		//	console.log(sessionStorage.login)
+			document.getElementById('nNickName').value = "";
+		}
+			
+		})
+		
+		} // fin de la funcion sendData
+	
+	
+	</script>
+
+
+  </body>
+</html>

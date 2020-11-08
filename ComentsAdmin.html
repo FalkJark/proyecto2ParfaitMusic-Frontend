@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+  <head>
+  	<title>Comentarios</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    	<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="Styles/stylesPrincipal/css/style.css">
+		<link rel="stylesheet" href="Styles/stylesPrincipal/css/extras.css">
+  </head>
+  <body onload="startComents()">
+		
+	<script>
+		//validar que la sesion esta abierta y los datos del usuario en curso
+		var validate = sessionStorage.login;
+		var type = sessionStorage.type;
+		var nickName = sessionStorage.nickName;
+		var name = sessionStorage.name;
+		var lastName = sessionStorage.lastName;
+		var password = sessionStorage.password;
+
+		var idSong = sessionStorage.idScoment;
+		var nameSong = sessionStorage.nameScoment;
+        var imgSong = sessionStorage.imgSong;
+        console.log(imgSong)
+		if(validate){
+			sessionStorage.login = true;
+			//console.log('all its ok')
+		}else{
+			//alert('something go wrong')
+			window.location.href = "login.html";
+		}	
+	</script>
+
+		<div class="wrapper d-flex align-items-stretch">
+			<nav id="sidebar" class="active">
+				<div class="custom-menu">
+					<button type="button" id="sidebarCollapse" class="btn btn-primary">
+	          <i class="fa fa-bars"></i>
+	          <span class="sr-only">Toggle Menu</span>
+	        </button>
+        </div>
+				<div class="p-4" id="Menu">
+		  		<h1><a href="Principal.html" class="logo">Parfait Music</a></h1>
+	        <ul class="list-unstyled components mb-5">
+	          <li class="active">
+	            <a href="Principal.html"><span class="fa mr-3"></span> Mi Perfil</a>
+			  </li>
+	        </ul>
+
+		        <div class="mb-5">
+					<h3 class="h6 mb-3">Simplemente disfruta</h3>
+		        </div>
+		    </div>    
+    		</nav>
+
+			<!-- Page Content  -->
+			<div id="content" class="p-4 p-md-5 pt-5" >
+                <div class="row">
+                    <div class="col-9">
+                        <h2 class="mb-4" id="titleList" style="text-align: left;">Comentarios sobre la Canción: </h2>
+                        <script>
+                            var title = document.getElementById('titleList');
+                            title.innerHTML += ` ${nameSong}`
+                        </script> 
+                    </div>
+                    <div class="col" id="portada" style="text-align: right;">
+                        
+                        <script>
+                            var portada = document.getElementById('portada');
+                            portada.innerHTML = `<img src="${imgSong}" width="200" height="200">`
+                        </script>
+                    </div>
+                  </div>
+				
+                   		
+				<div class="mt-5">
+					<table class="table">
+						<thead>
+						<tr>
+						  <th scope="col">ID_Comentario</th> 
+						  <th scope="col">usuario</th>
+						  <th scope="col-6">Comentario</th>
+						</tr>
+					  </thead>
+					  <tbody id="showData">
+					  </tbody>
+
+					</table>
+
+				  </div>
+				
+				  <div class="mt-5" id="newForm">
+
+				  </div>
+			</div>
+		</div>
+
+    <script src="Styles/stylesPrincipal/js/jquery.min.js"></script>
+    <script src="Styles/stylesPrincipal/js/popper.js"></script>
+    <script src="Styles/stylesPrincipal/js/bootstrap.min.js"></script>
+	<script src="Styles/stylesPrincipal/js/main.js"></script>
+
+	<!--============================================================================================================-->
+	
+    <script>// Cargar el contenido de la barra
+        var contenido = document.querySelector('#Menu')
+        contenido.innerHTML = sessionStorage.bar;
+	</script>
+	
+	<script> // Charge table
+		var contenido = document.querySelector('#showData');
+
+		function startComents(){
+		idS = {id:idSong}
+
+		fetch('http://localhost:5000/coments/particular',{
+        method:'POST',
+        body: JSON.stringify(idS),
+        cache: "no-cache",
+        headers: new Headers({
+		    "content-type": "application/json" })
+      }) // end of fetch
+	  .then(res => res.json())
+	  .then(res => {
+		  var comentsData = res['answer'];
+		    //console.log("tama;o del vector comentarios"+comentsData.length)
+			if(comentsData != 'null' ){
+				for(let i of comentsData){
+					contenido.innerHTML += `
+						<tr>
+                            <td>${i.id}</td>
+							<td>${i.user}</td>
+							<td>${i.text}</td>
+						</tr>
+					`
+				}
+			}else{
+                alert('Aun no sean hecho comentarios sobre esta canción')
+            }
+	  })
+	 
+	}	
+	</script>
+
+  </body>
+</html>
