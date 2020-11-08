@@ -153,7 +153,7 @@
 					spotify: lectura[i][5],
 					youtube: lectura[i][6]
 				}
-				fetch('http://localhost:5000/songs/register',{
+				fetch('https://parfaitmusic2.herokuapp.com//songs/register',{
 					method:'POST',
 					body: JSON.stringify(newSong),
 					cache: "no-cache",
@@ -195,7 +195,7 @@
 		var contenido = document.querySelector('#showData');
 
 		function getData(){
-			fetch('http://localhost:5000/songs')
+			fetch('https://parfaitmusic2.herokuapp.com//songs')
 			.then(data => data.json())
 			.then(data =>{
 				printAllData(data)
@@ -247,7 +247,7 @@
 			id:idSong
 		}  
 
-		fetch('http://localhost:5000/songs/delete',{
+		fetch('https://parfaitmusic2.herokuapp.com//songs/delete',{
 			method:'DELETE',
 			body: JSON.stringify(message),
 			cache: "no-cache",

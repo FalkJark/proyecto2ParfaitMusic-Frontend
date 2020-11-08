@@ -98,7 +98,7 @@
         var bodyTable = document.getElementById('showData');
 
         function getData(){
-			fetch('http://localhost:5000/request')
+			fetch('https://parfaitmusic2.herokuapp.com//request')
 			.then(data => data.json())
 			.then(data =>{
 				printAllData(data)
@@ -131,7 +131,7 @@
         function deleteRequest(idR,message){
             var idReq = {id:idR}
 
-            fetch('http://localhost:5000/request/delete',{
+            fetch('https://parfaitmusic2.herokuapp.com//request/delete',{
                 method:'DELETE',
                 body: JSON.stringify(idReq),
                 cache: "no-cache",
@@ -154,7 +154,7 @@
     
         function acceptRequest(idR){
             var idReq = {id:idR}
-            fetch('http://localhost:5000/request/accept',{
+            fetch('https://parfaitmusic2.herokuapp.com//request/accept',{
                 method:'POST',
                 body: JSON.stringify(idReq),
                 cache: "no-cache",

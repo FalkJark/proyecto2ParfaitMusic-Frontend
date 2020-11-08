@@ -107,7 +107,7 @@
 		var cont = document.querySelector('#showData');
 
 		function getData(){
-			fetch('http://localhost:5000/songs')
+			fetch('https://parfaitmusic2.herokuapp.com//songs')
 			.then(data => data.json())
 			.then(data =>{
 				//console.log(data)
@@ -168,7 +168,7 @@
 				youtube:youtubeS
 			}
 			
-			fetch('http://localhost:5000/playlist/add',{
+			fetch('https://parfaitmusic2.herokuapp.com//playlist/add',{
 				method:'POST',
 				body: JSON.stringify(elePlay),
 				cache: "no-cache",

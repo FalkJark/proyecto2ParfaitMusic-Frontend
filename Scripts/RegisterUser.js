@@ -17,7 +17,7 @@ formNewUser.addEventListener('submit', function(e){
         type: 'client'
     }
 
-    fetch('http://localhost:5000/users/register',{
+    fetch('https://parfaitmusic2.herokuapp.com//users/register',{
         method:'POST',
         body: JSON.stringify(newU),
         cache: "no-cache",

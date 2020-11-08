@@ -119,7 +119,7 @@
 <script>
     var contenido = document.querySelector('#showUsers')
     function getUsers(){
-      fetch('http://localhost:5000/users')
+      fetch('https://parfaitmusic2.herokuapp.com//users')
       .then(data => data.json())
       .then(data =>{
         datos = data;
@@ -173,7 +173,7 @@
         nickName:vNick
       }  
 
-      fetch('http://localhost:5000/users/delete',{
+      fetch('https://parfaitmusic2.herokuapp.com//users/delete',{
         method:'DELETE',
         body: JSON.stringify(message),
         cache: "no-cache",
@@ -249,7 +249,7 @@
 			type: nType
 		} //end of newMod
 
-    fetch('http://localhost:5000/users/modify',{
+    fetch('https://parfaitmusic2.herokuapp.com//users/modify',{
 			method:'PUT',
 			body: JSON.stringify(newMod),
 			cache: "no-cache",
@@ -364,7 +364,7 @@
                 type: nType
               }
 
-              fetch('http://localhost:5000/users/register',{
+              fetch('https://parfaitmusic2.herokuapp.com//users/register',{
               method:'POST',
               body: JSON.stringify(newMod),
               cache: "no-cache",
