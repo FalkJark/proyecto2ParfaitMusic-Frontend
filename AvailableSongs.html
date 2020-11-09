@@ -149,35 +149,18 @@
 	
 		function addPlaylist(idS){
 			
+			idSong = {id:idS,user:nickName}
 
-
-
-
-
-
-
-			elePlay = {
-			//	'id':1,
-				user:nickName,
-				idSong:idS,
-				name:nameS,
-				artist:artistS,
-				album:albumS,
-				year:yearS,
-				spotify:spotifyS,
-				youtube:youtubeS
-			}
-			
-			fetch('https://parfaitmusic2.herokuapp.com//playlist/add',{
+			fetch('http://localhost:5000/playlist/add',{
 				method:'POST',
-				body: JSON.stringify(elePlay),
+				body: JSON.stringify(idSong),
 				cache: "no-cache",
 				headers: new Headers({
 					"content-type": "application/json" })
 				}) // end of fetch
 				.then(res => res.json())
 				.then(res => {
-					alert('Cancion agregada a tu playlist')
+						alert(res['desc'])
 				})
 			
 		}
